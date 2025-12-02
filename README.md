@@ -126,6 +126,13 @@ for table_name in inspector.get_table_names():
     station :  elevation ,  FLOAT
 
 
+## Sharing the Aiden Health Tracker
+- Run locally: `python aiden_health_app.py` (defaults to `http://127.0.0.1:5000`) and copy the dashboard's "Share the tracker" link for others.
+- Let others on your network view it: `AIDEN_HOST=0.0.0.0 python aiden_health_app.py` and share `http://<your-local-ip>:5000/`.
+- Change the port if needed: `AIDEN_PORT=8080 python aiden_health_app.py` then share `http://<your-local-ip>:8080/`.
+- For internet sharing, deploy to a hosting service (e.g., render.com, Railway, Fly.io) and use the provided public URL; avoid exposing your home IP directly.
+
+
 # Precipitation Analysis
 
 
