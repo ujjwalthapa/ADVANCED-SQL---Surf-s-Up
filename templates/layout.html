@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aiden Health Tracker</title>
+  <style>
+    :root {
+      --primary: #0c5d99;
+      --accent: #f9b234;
+      --muted: #eef2f7;
+      --text: #223;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: var(--muted);
+      color: var(--text);
+    }
+    header {
+      background: linear-gradient(120deg, var(--primary), #0f7abf);
+      color: white;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0 0 0.3rem;
+      font-weight: 700;
+    }
+    header p { margin: 0; opacity: 0.9; }
+    main { padding: 1.5rem; }
+    nav a {
+      color: white;
+      margin-right: 1rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .card h2 { margin-top: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    label { font-weight: 600; display: block; margin-top: 0.75rem; }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #d2d7e0;
+      margin-top: 0.3rem;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    button, .button {
+      background: var(--primary);
+      color: white;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-top: 1rem;
+      display: inline-block;
+      text-decoration: none;
+    }
+    button:hover, .button:hover { filter: brightness(1.05); }
+    .pill {
+      padding: 0.3rem 0.6rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-block;
+    }
+    .pill.low { background: #e0f7ec; color: #1a7f4f; }
+    .pill.moderate { background: #fff4e6; color: #b36b00; }
+    .pill.high { background: #ffe5e5; color: #c0392b; }
+    .alert { padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; }
+    .alert.success { background: #e8f5e9; color: #226f3a; }
+    .alert.warning { background: #fff4e6; color: #b36b00; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.6rem; border-bottom: 1px solid #e4e8f0; text-align: left; }
+    th { background: #f2f5fa; }
+    .share-box { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .share-input {
+      border: 1px dashed #b8c2d1;
+      background: #f8fafc;
+      padding: 0.55rem 0.75rem;
+      border-radius: 6px;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    }
+    .muted { color: #506070; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Aiden Health Tracker</h1>
+    <p>Log cough/asthma details, assess sickness risk, and share instructions with teachers.</p>
+    <nav>
+      <a href="{{ url_for('index') }}">Dashboard</a>
+      <a href="{{ url_for('log_view') }}">All entries</a>
+      <a href="{{ url_for('load_demo') }}">Load demo data</a>
+    </nav>
+  </header>
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

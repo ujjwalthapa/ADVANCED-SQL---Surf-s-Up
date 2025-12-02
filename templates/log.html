@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="card">
+    <h2>All health entries</h2>
+    {% if entries %}
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Risk</th>
+            <th>Cough</th>
+            <th>Asthma</th>
+            <th>Peak flow</th>
+            <th>Fever</th>
+            <th>Exposures</th>
+            <th>Teacher note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+            <tr>
+              <td>{{ entry.date }}</td>
+              <td><span class="pill {{ entry.risk|lower }}">{{ entry.risk }} ({{ entry.risk_score }})</span></td>
+              <td>{{ entry.cough_severity }}/5<br><small>{{ entry.cough_notes }}</small></td>
+              <td>{{ 'Yes' if entry.asthma_trouble else 'No' }}<br><small>{{ entry.asthma_notes }}</small></td>
+              <td>{{ entry.peak_flow or '—' }}</td>
+              <td>{{ 'Yes' if entry.fever else 'No' }}</td>
+              <td>{{ entry.exposures or '—' }}</td>
+              <td>{{ entry.teacher_note or '—' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No entries yet. Add your first log from the dashboard.</p>
+    {% endif %}
+  </div>
+{% endblock %}

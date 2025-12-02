@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="card">
+    <h2>Share the tracker</h2>
+    <p class="muted">Send this link to teachers or caregivers so they can open the dashboard anywhere the server is reachable.</p>
+    <div class="share-box">
+      <span class="share-input">{{ share_link }}</span>
+      <a class="button" href="{{ share_link }}" target="_blank" rel="noopener">Open link</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <strong>Want a quick walkthrough?</strong> Use "Load demo data" to prefill sample entries for testing the dashboard without entering personal details.
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Today's health check</h2>
+      <form action="{{ url_for('add_entry') }}" method="post">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" value="{{ latest.date if latest else '' }}">
+
+        <label for="cough_severity">Cough severity (0-5)</label>
+        <select id="cough_severity" name="cough_severity">
+          {% for i in range(0,6) %}
+            <option value="{{ i }}">{{ i }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="cough_notes">Cough notes (frequency, sound, color)</label>
+        <textarea id="cough_notes" name="cough_notes" placeholder="Eg: Night cough, phlegm yellow, rough breath."></textarea>
+
+        <label><input type="checkbox" name="asthma_trouble"> Asthma trouble (wheeze, chest tightness)</label>
+        <label for="asthma_notes">Asthma notes</label>
+        <textarea id="asthma_notes" name="asthma_notes" placeholder="Eg: Used rescue inhaler 1x before PE."></textarea>
+
+        <label for="peak_flow">Peak flow (L/min)</label>
+        <input type="number" id="peak_flow" name="peak_flow" min="0" step="1" placeholder="310">
+
+        <label for="medication">Medication taken today</label>
+        <input type="text" id="medication" name="medication" placeholder="Rescue inhaler, controller, cough syrup">
+
+        <label><input type="checkbox" name="fever"> Fever over 100.4°F</label>
+
+        <label for="exposures">Recent exposure/triggers</label>
+        <input type="text" id="exposures" name="exposures" placeholder="Cold contact, pollen, smoke">
+
+        <label for="teacher_note">Instructions for teachers</label>
+        <textarea id="teacher_note" name="teacher_note" placeholder="Signs to watch for, when to send to nurse, activity limits."></textarea>
+
+        <button type="submit">Save entry</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Current status</h2>
+      {% if latest %}
+        {% set risk_class = risk|lower %}
+        <p><strong>Risk:</strong> <span class="pill {{ risk_class }}">{{ risk }}</span></p>
+        <p><strong>Date logged:</strong> {{ latest.date }}</p>
+        <p><strong>Teacher note:</strong> {{ latest.teacher_note or 'No note added yet.' }}</p>
+        <p><strong>Cough severity:</strong> {{ latest.cough_severity }}/5</p>
+        <p><strong>Asthma trouble:</strong> {{ 'Yes' if latest.asthma_trouble else 'No' }}</p>
+        <p><strong>Medications:</strong> {{ latest.medication or 'None logged' }}</p>
+      {% else %}
+        <p>No data yet. Log today's symptoms to get a risk read.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>How risk is calculated</h2>
+    <ul>
+      <li>Cough severity adds 0–5 points.</li>
+      <li>Asthma trouble adds 2 points.</li>
+      <li>Fever adds 3 points.</li>
+      <li>Each listed exposure (up to 3) adds 1 point.</li>
+      <li>Peak flow under 325 adds 2–3 points depending on how low it is.</li>
+      <li>0–3 = Low, 4–7 = Moderate, 8+ = High.</li>
+    </ul>
+  </div>
+{% endblock %}
